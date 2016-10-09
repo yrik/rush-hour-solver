@@ -85,7 +85,7 @@ class TestSolver(unittest.TestCase):
         solver = Solver()
         solver.load_data(board_str)
         moves = solver.solve()
-        solver.print_steps(solver.cars, moves)
+        print solver.format_steps(solver.cars, moves)
 
     def test_solve6x6_2(self):
 
@@ -101,14 +101,12 @@ class TestSolver(unittest.TestCase):
         solver = Solver()
         solver.load_data(board_str)
         moves = solver.solve()
-        solver.print_steps(solver.cars, moves)
+        print solver.format_steps(solver.cars, moves)
 
-    def test_solve8x10(self):
+    def test_solve8x8(self):
 
         board_str = '''
         ....AA..
-        QZ....K.
-        QZ....K.
         QZ....K.
         QZ......
         ..BBCCK.
@@ -117,10 +115,10 @@ class TestSolver(unittest.TestCase):
         ...IEF..
         ...IJJ..'''
 
-        solver = Solver(size={'x': 8, 'y': 10})
+        solver = Solver(size={'x': 8, 'y': 8})
         solver.load_data(board_str)
         moves = solver.solve()
-        solver.print_steps(solver.cars, moves)
+        print solver.format_steps(solver.cars, moves)
 
 
 if __name__ == '__main__':

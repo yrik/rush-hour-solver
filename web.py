@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, request
 from solver import Solver, WrongInputException, CanNonSolveException
 
@@ -17,7 +19,7 @@ def main():
                 solver = Solver()
                 solver.load_data(board_str)
                 moves = solver.solve()
-                response = solver.print_steps(solver.cars, moves)
+                response = solver.format_steps(solver.cars, moves)
             except CanNonSolveException as e:
                 return "Can not solve this board</br><a href='/'>Try another board</a>"
             except WrongInputException as e:
@@ -45,4 +47,5 @@ GGHHEF
     return resp_text
 
 if __name__ == "__main__":
-    app.run()
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)

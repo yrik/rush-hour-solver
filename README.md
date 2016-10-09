@@ -41,6 +41,7 @@ python tests.py
 
 To run custom sample:
 ```
+from solver import Solver
 
 # Put your own data into `board_data` var.
 # `rr` - means red car to be freed.
@@ -59,9 +60,9 @@ board_data = '''
 solver = Solver()
 solver.load_data(board_data)
 print 'Loaded data'
-solver.print_data(solver.cars)
+print solver.format_data(solver.cars)
 print 'Looking for solution.. (may take several secods)'
 moves = solver.solve()
-solver.print_steps(solver.cars, moves)
+print solver.format_steps(solver.cars, moves)
 ```
 

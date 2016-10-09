@@ -1,4 +1,4 @@
-from copy import deepcopy
+from copy import deepcopy, copy
 
 VERTICAL = 'vertical'
 HORIZONTAL = 'horizontal'
@@ -13,19 +13,21 @@ class CanNonSolveException(Exception):
 
 
 class Car(object):
-    orientantion = None # VERTICAL or HORIZONTAL
-    character = None
-    start = None # {'x': x, 'y': y}
-    stop = None # {'x': x, 'y': y}
-    is_red_car = None # red car we need to free out
-
     def __init__(
             self, orientantion, character, start, stop, is_red_car=None):
-        self.orientantion = orientantion
+        self.orientantion = orientantion  # VERTICAL or HORIZONTAL
         self.character = character
-        self.start = start
-        self.stop = stop
-        self.is_red_car = is_red_car
+        self.start = start  # {'x': x, 'y': y}
+        self.stop = stop  # {'x': x, 'y': y}
+        self.is_red_car = is_red_car  # red car we need to free out
+
+    def __deepcopy__(self, memo):
+        cls = self.__class__
+        result = cls.__new__(cls)
+        memo[id(self)] = result
+        for k, v in self.__dict__.items():
+            setattr(result, k, deepcopy(v, memo))
+        return result
 
     def get_points(self):
         """
@@ -212,10 +214,7 @@ class Solver(object):
                     new_cars = deepcopy(cars)
                     new_car = filter(lambda x: x.character == car.character, new_cars)[0]
                     new_car.move(direction, 1)
-                    try:
-                        self.cars_to_matrix(cars)
-                    except Exception as e:
-                        import pdb;pdb.set_trace()
+                    self.cars_to_matrix(cars)
                     states.append([[[car.character, direction]], new_cars])
 
         return states
@@ -229,16 +228,16 @@ class Solver(object):
         Q = []
         cars = self.cars
         visited = []
-        Q.insert(0, [[], cars])
+        Q.append([[], cars])
         while len(Q) != 0:
-            moves, cars = Q.pop()
+            moves, cars = Q.pop(0)
 
             if self.is_solved(cars):
                 return moves
                 
             for new_moves, new_cars in self.get_all_states(cars):
                 if hash(str(new_cars)) not in visited:
-                    Q.insert(0, [moves + new_moves, new_cars])
+                    Q.append([moves + new_moves, new_cars])
                     visited.append(hash(str(new_cars)))
 
         raise CanNonSolveException('Can not solve')
@@ -252,7 +251,7 @@ class Solver(object):
             return True
         return False
            
-    def print_steps(self, cars, moves):
+    def format_steps(self, cars, moves):
         output = ''
         output += '\n\nSOLUTION\n'
         output += "; ".join(["{} {}".format(move[0], move[1]) for move in moves])
@@ -261,9 +260,8 @@ class Solver(object):
             car = filter(lambda x: x.character == move[0], cars)[0]
             output += '\nMOVE {} {}\n'.format(move[0], move[1])
             car.move(move[1], 1)
-            output += self.print_data(cars)
+            output += self.format_data(cars)
         output += '\nEND of SOLUTION\n\n'
-        print output
         return output
 
     def cars_to_matrix(self, cars):
@@ -280,13 +278,12 @@ class Solver(object):
 
         return data
 
-    def print_data(self, cars):
+    def format_data(self, cars):
         matrix = self.cars_to_matrix(cars)
 
         output = ''
         for line in matrix:
             output += " ".join(line) + '\n'
-        print output
         return output
 
 
@@ -304,7 +301,7 @@ if __name__ == '__main__':
     solver = Solver()
     solver.load_data(board_data)
     print 'Loaded data'
-    solver.print_data(solver.cars)
+    solver.format_data(solver.cars)
     print 'Looking for solution.. (may take several secods)'
     moves = solver.solve()
-    solver.print_steps(solver.cars, moves)
+    print solver.format_steps(solver.cars, moves)
