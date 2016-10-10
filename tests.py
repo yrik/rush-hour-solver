@@ -2,6 +2,7 @@ import unittest
 
 from solver import Solver, Car, VERTICAL, HORIZONTAL
 
+
 class TestCar(unittest.TestCase):
 
     def test_init_horizontal(self):
@@ -70,7 +71,6 @@ class TestSolver(unittest.TestCase):
         with self.assertRaises(Exception) as context:
             solver.solve()
         self.assertTrue('Can not solve' in context.exception)
-
 
     def test_solve6x6(self):
 
