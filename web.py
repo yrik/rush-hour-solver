@@ -21,18 +21,20 @@ def main():
                 moves = solver.solve()
                 response = solver.format_steps(solver.cars, moves)
             except CanNonSolveException as e:
-                return "Can not solve this board</br><a href='/'>Try another board</a>"
+                return "Can not solve this board ({})</br>".format(e.message) +\
+                    "<a href='/'>Try another board</a>"
             except WrongInputException as e:
-                return "Can not load this board</br><a href='/'>Try another board</a>"
+                return "Can not load this board ({})</br>".format(e.message) +\
+                    "<a href='/'>Try another board</a>"
 
             return "<pre>{}</pre></br><a href='/'>Try another board</a>".format(response)
 
     resp_text = '''
-        <form method="POST">
-            <h2>Rush hour solver online</h2>
+        <form method="POST" style="text-align: center">
+            <h2>Rush hour solver online (6x6)</h2>
             <p>
             </p>
-            <textarea name='board' rows="6">
+            <textarea name='board' rows="6" cols="6" style="font-family: monospace;font-size:2em;">
 ....AA
 ..BBCC
 rr..EF

@@ -183,13 +183,20 @@ class Solver(object):
         """
         matrix = []
         for line in init_data.split("\n"):
-            line = line.replace(' ', '')
+            line = line.replace(' ', '').replace('\r', '')
             if not line:
                 continue
             matrix_line = []
             for item in line:
                 matrix_line.append(item)
             matrix.append(line)
+
+        if len(matrix) != self.size['y']:
+            raise WrongInputException("Incorrect board size(y) given")
+        for line in matrix:
+            if len(line) != self.size['x']:
+                raise WrongInputException("Incorrect board size(x) given")
+
         return matrix
  
     def load_data(self, init_data):
