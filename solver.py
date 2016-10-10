@@ -58,8 +58,6 @@ class Car(object):
         Check if we can move car to `direction` and `length`
         """
 
-        flag = True
-
         if self.orientantion == HORIZONTAL:
             if direction in ['up', 'down']:
                 return False
@@ -253,7 +251,7 @@ class Solver(object):
         '''
         Q = []
         cars = self.cars
-        visited = []
+        visited = set()
         Q.append([[], cars])
         while len(Q) != 0:
             moves, cars = Q.pop(0)
@@ -264,7 +262,7 @@ class Solver(object):
             for new_moves, new_cars in self.get_all_states(cars):
                 if hash(str(new_cars)) not in visited:
                     Q.append([moves + new_moves, new_cars])
-                    visited.append(hash(str(new_cars)))
+                    visited.add(hash(str(new_cars)))
 
         raise CanNonSolveException('Can not solve')
 
