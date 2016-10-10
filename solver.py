@@ -62,11 +62,11 @@ class Car(object):
 
         if self.orientantion == HORIZONTAL:
             if direction in ['up', 'down']:
-                flag = False
+                return False
 
         if self.orientantion == VERTICAL:
             if direction in ['left', 'right']:
-                flag = False
+                return False
 
         # check if there are some other cars on the way
         # or board ending
