@@ -74,16 +74,16 @@ class Car(object):
         car.move(direction, length)
         for point in car.get_points():
             if point['y'] < 0 or point['x'] < 0:
-                flag = False
+                return False
             try:
                 character = matrix[point['y']][point['x']]
                 if character != '.' and character != self.character:
-                    flag = False
+                    return False
             except IndexError:
-                flag = False
+                return False
         del car
 
-        return flag
+        return True
 
     def move(self, direction, length):
         if direction == 'up':
