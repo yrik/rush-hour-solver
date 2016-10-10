@@ -13,6 +13,7 @@ class CanNonSolveException(Exception):
 
 
 class Car(object):
+
     def __init__(
             self, orientantion, character, start, stop, is_red_car=None):
         self.orientantion = orientantion  # VERTICAL or HORIZONTAL
@@ -22,6 +23,10 @@ class Car(object):
         self.is_red_car = is_red_car  # red car we need to free out
 
     def __deepcopy__(self, memo):
+        """
+        Overwride default deepcopy to simplify it
+        and cover only our case in order to improve performance
+        """
         cls = self.__class__
         result = cls.__new__(cls)
         memo[id(self)] = result
@@ -31,7 +36,7 @@ class Car(object):
 
     def get_points(self):
         """
-        Returns set of points that car takes
+        Returns set of points that car uses on board
         """
         points = []
         car = self
@@ -48,6 +53,9 @@ class Car(object):
         return points
 
     def can_move(self, direction, length, matrix):
+        """
+        Check if we can move car to `direction` and `length`
+        """
 
         flag = True
 
@@ -170,6 +178,9 @@ class Solver(object):
                     }
 
     def str_to_matrix(self, init_data):
+        """
+        Covert text into 2D array that will be processed further
+        """
         matrix = []
         for line in init_data.split("\n"):
             line = line.replace(' ', '')
@@ -185,7 +196,7 @@ class Solver(object):
         """
         We assume that there is no case 
         when car be readed as vertical and horizontal at the same time
-        Also we assume that ther is no cars on the way of red car that can't be moved to side
+        Also we assume that there are no cars on the way of red car that can't be moved to side
         """
         matrix = self.str_to_matrix(init_data)
         self.generate_cars_horizontal(matrix)
@@ -196,7 +207,6 @@ class Solver(object):
         """
         - check if red car on board
         - check if we have only cars in size > 1
-        - check if it's possible to have solution
         """
         if not filter(lambda x: x.is_red_car, cars):
             raise WrongInputException("No red car found")
@@ -207,10 +217,15 @@ class Solver(object):
         return
 
     def get_all_states(self, cars):
+        """
+        It takes current cars state and generates all possible next states
+        within one move of one car
+        """
         states = []
         for car in cars:
             for direction in ['up', 'down', 'left', 'right']:
                 if car.can_move(direction, 1, self.cars_to_matrix(cars)):
+                    # TODO: in case of performance improvemens see here first
                     new_cars = deepcopy(cars)
                     new_car = filter(lambda x: x.character == car.character, new_cars)[0]
                     new_car.move(direction, 1)
@@ -222,7 +237,7 @@ class Solver(object):
     def solve(self):
         '''
         Take initial board and get all possible next boards,
-        for each board take all next boards
+        for each board take all next boards,
         iterate untill solved
         '''
         Q = []

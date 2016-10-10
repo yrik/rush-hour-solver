@@ -103,19 +103,21 @@ class TestSolver(unittest.TestCase):
         moves = solver.solve()
         print solver.format_steps(solver.cars, moves)
 
-    def test_solve8x8(self):
+    def test_solve8x7(self):
+        """
+        This test takes more time due to bigger board
+        """
 
         board_str = '''
         ....AA..
-        QZ....K.
         QZ......
-        ..BBCCK.
+        QZ......
         rr..EF..
         GGHHEF..
         ...IEF..
         ...IJJ..'''
 
-        solver = Solver(size={'x': 8, 'y': 8})
+        solver = Solver(size={'x': 8, 'y': 7})
         solver.load_data(board_str)
         moves = solver.solve()
         print solver.format_steps(solver.cars, moves)

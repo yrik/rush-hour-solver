@@ -22,6 +22,8 @@ for each generated state we repeat it again.
 We iterate over the possible moves until red car is moved
 to the exit on right side of the board.
 
+**Demo:** [Try demo here](https://rush-hour-solver.herokuapp.com/). Note: there is a limit of max 30 sec excecution time, not all boards can be solved within this time.
+
 Rrerequisites
 ---
  - Python 2.7
