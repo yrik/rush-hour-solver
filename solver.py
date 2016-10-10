@@ -4,6 +4,7 @@ VERTICAL = 'vertical'
 HORIZONTAL = 'horizontal'
 SIZE = {'x': 6, 'y': 6}
 
+
 class WrongInputException(Exception):
     pass
 
@@ -44,10 +45,10 @@ class Car(object):
         x_stop, y_stop = car.stop['x'], car.stop['y']
         character = car.character
         if self.orientantion == VERTICAL:
-            for y in range(y_start, y_stop+1):
+            for y in range(y_start, y_stop + 1):
                 points.append({'x': x_start, 'y': y, 'character': character})
         if self.orientantion == HORIZONTAL:
-            for x in range(x_start, x_stop+1):
+            for x in range(x_start, x_stop + 1):
                 points.append({'x': x, 'y': y_start, 'character': character})
 
         return points
@@ -126,9 +127,10 @@ class Solver(object):
                 if item != car_data['character'] or y == self.size['y'] - 1:
                     # We have start/stop point here
                     if car_data['character']:
-                        car_data['stop'] = {'x': x, 'y': y-1}
-                        if y == self.size['y'] - 1 and item == car_data['character']:
-                            car_data['stop'] = {'x': x, 'y': y}
+                        car_data['stop'] = {'x': x, 'y': y - 1}
+                        if y == self.size['y'] - 1:
+                            if item == car_data['character']:
+                                car_data['stop'] = {'x': x, 'y': y}
 
                         if car_data['stop']['y'] - car_data['start']['y'] > 0:
                             if car_data['character'] != '.':
@@ -157,9 +159,10 @@ class Solver(object):
                 if item != car_data['character'] or x == self.size['x'] - 1:
                     # We have start/stop point here
                     if car_data['character']:
-                        car_data['stop'] = {'x': x-1, 'y': y}
-                        if x == self.size['x'] - 1 and item == car_data['character']:
-                            car_data['stop'] = {'x': x, 'y': y}
+                        car_data['stop'] = {'x': x - 1, 'y': y}
+                        if x == self.size['x'] - 1:
+                            if item == car_data['character']:
+                                car_data['stop'] = {'x': x, 'y': y}
 
                         if car_data['stop']['x'] - car_data['start']['x'] > 0:
                             if car_data['character'] != '.':
@@ -198,12 +201,13 @@ class Solver(object):
                 raise WrongInputException("Incorrect board size(x) given")
 
         return matrix
- 
+
     def load_data(self, init_data):
         """
-        We assume that there is no case 
+        We assume that there is no case
         when car be readed as vertical and horizontal at the same time
-        Also we assume that there are no cars on the way of red car that can't be moved to side
+        Also we assume that there are no cars on the way of red car
+        that can't be moved to side
         """
         matrix = self.str_to_matrix(init_data)
         self.generate_cars_horizontal(matrix)
@@ -234,9 +238,9 @@ class Solver(object):
                 if car.can_move(direction, 1, self.cars_to_matrix(cars)):
                     # TODO: in case of performance improvemens see here first
                     new_cars = deepcopy(cars)
-                    new_car = filter(lambda x: x.character == car.character, new_cars)[0]
+                    new_car = filter(
+                        lambda x: x.character == car.character, new_cars)[0]
                     new_car.move(direction, 1)
-                    self.cars_to_matrix(cars)
                     states.append([[[car.character, direction]], new_cars])
 
         return states
@@ -256,7 +260,7 @@ class Solver(object):
 
             if self.is_solved(cars):
                 return moves
-                
+
             for new_moves, new_cars in self.get_all_states(cars):
                 if hash(str(new_cars)) not in visited:
                     Q.append([moves + new_moves, new_cars])
@@ -269,10 +273,10 @@ class Solver(object):
         Moment when red car is on the right side
         """
         red_car = filter(lambda x: x.is_red_car, cars)[0]
-        if red_car.stop['x'] == self.size['x']-1:
+        if red_car.stop['x'] == self.size['x'] - 1:
             return True
         return False
-           
+
     def format_steps(self, cars, moves):
         output = ''
         output += '\n\nSOLUTION\n'
