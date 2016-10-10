@@ -33,6 +33,8 @@ def main():
         <form method="POST" style="text-align: center">
             <h2>Rush hour solver online (6x6)</h2>
             <p>
+            <br/>
+            <a target="_blank" href="https://github.com/yrik/rush-hour-solver">See source code here</a>
             </p>
             <textarea name='board' rows="6" cols="6" style="font-family: monospace;font-size:2em;">
 ....AA
@@ -43,7 +45,10 @@ GGHHEF
 ...IJJ
             </textarea>
             <br/>
-            <input type="submit" value="Submit (will take some time)" />
+            <input type="submit" value="Submit (will take some time)" style="font-size:2em;"/>
+            <br/>
+            <br/>
+            Note: for some complex board it may take more than 30s, in that case heroku will stop excecution.
         </form>
     '''
     return resp_text
